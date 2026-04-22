@@ -1,0 +1,52 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allWriting = await getCollection('writing', ({ data }) => !data.draft);
+const posts = allWriting.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Writing" description="Essays on urban policy, civic technology, and the shape of American cities.">
+  <div class="max-w-2xl mx-auto px-6 py-16">
+
+    <h1 class="font-display text-4xl font-semibold tracking-tight mb-2">Writing</h1>
+    <div class="w-10 h-0.5 bg-forest mb-3"></div>
+    <p class="text-stone-500 text-sm mb-12">
+      Essays on urban policy, civic technology, and the shape of American cities.
+    </p>
+
+    {posts.length === 0 ? (
+      <p class="text-stone-400 text-sm">Essays coming soon.</p>
+    ) : (
+      <div class="divide-y divide-stone-100">
+        {posts.map((post) => (
+          <article class="py-6 group">
+            <a href={`/writing/${post.slug}`} class="block">
+              <div class="flex items-start gap-4 justify-between">
+                <div>
+                  <h2 class="font-display text-xl font-medium text-ink group-hover:text-forest transition-colors leading-snug mb-1.5">
+                    {post.data.title}
+                  </h2>
+                  <p class="text-sm text-stone-500 leading-relaxed">
+                    {post.data.description}
+                  </p>
+                </div>
+                <time class="text-xs text-stone-400 shrink-0 mt-1 font-mono">
+                  {post.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                </time>
+              </div>
+              {post.data.tags.length > 0 && (
+                <div class="flex gap-2 mt-3 flex-wrap">
+                  {post.data.tags.map((tag) => (
+                    <span class="tag">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </a>
+          </article>
+        ))}
+      </div>
+    )}
+
+  </div>
+</BaseLayout>

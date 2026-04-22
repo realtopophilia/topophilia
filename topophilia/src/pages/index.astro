@@ -1,0 +1,120 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allWriting = await getCollection('writing', ({ data }) => !data.draft);
+const recentWriting = allWriting
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 4);
+
+const allWork = await getCollection('work');
+const featuredWork = allWork
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+---
+
+<BaseLayout>
+  <!-- Hero -->
+  <section class="max-w-3xl mx-auto px-6 pt-16 pb-14 border-b border-stone-200">
+    <h1 class="font-display text-5xl font-semibold leading-tight tracking-tight text-ink mb-6">
+      Changing the shape<br />
+      <span class="italic font-light text-sun-dark">of American cities.</span>
+    </h1>
+    <p class="text-lg text-stone-600 leading-relaxed max-w-xl">
+      Writing and tools at the intersection of civic technology, urban policy, and the
+      belief that American cities can be more affordable, more equitable, and more alive.
+      By <a href="/about" class="text-forest hover:underline underline-offset-2">Jason Griess</a>
+      in Pittsburgh.
+    </p>
+  </section>
+
+  <!-- Recent writing -->
+  {recentWriting.length > 0 && (
+    <section class="max-w-3xl mx-auto px-6 pt-12 pb-10">
+      <div class="flex items-baseline justify-between mb-7">
+        <h2 class="font-display text-xs font-semibold uppercase tracking-widest text-stone-400">
+          Writing
+        </h2>
+        <a href="/writing" class="text-xs text-forest hover:underline underline-offset-2">
+          All essays →
+        </a>
+      </div>
+
+      <div class="divide-y divide-stone-100">
+        {recentWriting.map((post) => (
+          <article class="py-5 group">
+            <a href={`/writing/${post.slug}`} class="block">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <h3 class="font-display text-lg font-medium text-ink group-hover:text-forest transition-colors leading-snug mb-1">
+                    {post.data.title}
+                  </h3>
+                  <p class="text-sm text-stone-500 leading-relaxed">
+                    {post.data.description}
+                  </p>
+                </div>
+                <time class="text-xs text-stone-400 shrink-0 mt-1 font-mono">
+                  {post.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                </time>
+              </div>
+              {post.data.tags.length > 0 && (
+                <div class="flex gap-2 mt-3 flex-wrap">
+                  {post.data.tags.map((tag) => (
+                    <span class="tag">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </a>
+          </article>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Featured work -->
+  {featuredWork.length > 0 && (
+    <section class="max-w-3xl mx-auto px-6 pt-2 pb-16 border-t border-stone-100">
+      <div class="flex items-baseline justify-between mb-7 mt-10">
+        <h2 class="font-display text-xs font-semibold uppercase tracking-widest text-stone-400">
+          Work
+        </h2>
+        <a href="/work" class="text-xs text-forest hover:underline underline-offset-2">
+          All projects →
+        </a>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {featuredWork.map((project) => (
+          <a
+            href={project.data.url ?? `/work/${project.slug}`}
+            target={project.data.url ? '_blank' : undefined}
+            rel={project.data.url ? 'noopener' : undefined}
+            class="group block border border-stone-200 rounded-lg p-5 hover:border-forest transition-colors duration-200"
+          >
+            <h3 class="font-display font-semibold text-ink group-hover:text-forest transition-colors mb-2 leading-snug">
+              {project.data.title}
+            </h3>
+            <p class="text-sm text-stone-500 leading-relaxed mb-3">
+              {project.data.description}
+            </p>
+            {project.data.tags.length > 0 && (
+              <div class="flex gap-1.5 flex-wrap">
+                {project.data.tags.slice(0, 3).map((tag) => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
+            )}
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Empty state: show just the hero if no content yet -->
+  {recentWriting.length === 0 && featuredWork.length === 0 && (
+    <section class="max-w-3xl mx-auto px-6 pt-16 pb-24 text-center">
+      <p class="text-stone-400 text-sm">More coming soon.</p>
+    </section>
+  )}
+</BaseLayout>

@@ -1,0 +1,63 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('writing', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <div class="max-w-2xl mx-auto px-6 py-16">
+
+    <!-- Breadcrumb -->
+    <a href="/writing" class="text-xs text-stone-400 hover:text-forest transition-colors mb-8 inline-block">
+      ← Writing
+    </a>
+
+    <!-- Header -->
+    <header class="mb-12">
+      <h1 class="font-display text-4xl font-semibold tracking-tight leading-tight text-ink mb-4">
+        {post.data.title}
+      </h1>
+      <p class="text-lg text-stone-500 leading-relaxed mb-5">
+        {post.data.description}
+      </p>
+      <div class="flex items-center gap-4 flex-wrap">
+        <time class="text-xs text-stone-400 font-mono">
+          {post.data.date.toLocaleDateString('en-US', {
+            month: 'long', day: 'numeric', year: 'numeric'
+          })}
+        </time>
+        {post.data.tags.length > 0 && (
+          <div class="flex gap-2 flex-wrap">
+            {post.data.tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        )}
+      </div>
+      <div class="w-10 h-0.5 bg-forest mt-8"></div>
+    </header>
+
+    <!-- Body -->
+    <div class="prose prose-stone prose-topophilia max-w-none text-base leading-relaxed">
+      <Content />
+    </div>
+
+    <!-- Footer nav -->
+    <div class="mt-16 pt-8 border-t border-stone-200">
+      <a href="/writing" class="text-sm text-forest hover:underline underline-offset-2">
+        ← Back to all writing
+      </a>
+    </div>
+
+  </div>
+</BaseLayout>
