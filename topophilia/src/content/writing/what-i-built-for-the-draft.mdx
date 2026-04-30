@@ -1,0 +1,61 @@
+---
+title: "What I built for the Draft — and why it should stay"
+description: "I built a near-real-time civic data dashboard for the 2026 NFL Draft in Pittsburgh. Here's what I learned, what I missed, and why the real project is just starting."
+date: 2026-04-29
+tags: ["civic tech", "Pittsburgh", "open data", "tools"]
+draft: false
+---
+
+For weeks before the NFL Draft came to Pittsburgh, it was everywhere. Not the football part — the logistics part. The running joke, the ambient dread. *You gonna be in town for the Draft?* became shorthand for: are you prepared for the city to briefly stop working? Traffic's gonna be a nightmare. Stay away from downtown. You heard about the road closures?
+
+I had that same conversation with a friend and had a slightly different reaction: what if someone could actually see what was happening? Not just hear about it — see it. The parking, the buses, the bike share, the traffic, all at once, in something close to real time. Not a news story about the Draft. A window into it.
+
+So I built one. Mostly for myself. Partly because I was nosy enough to want to watch the chaos even if I stayed home.
+
+---
+
+Here's the part I want to be honest about: I'm not a developer.
+
+I have some background understanding public data feeds — where they live, what they contain — but I don't have a CS degree and I'm not someone who has spent years writing code. A year ago, building something like this would have been out of reach for me. I would have had the idea, written it down, and moved on.
+
+What changed is Claude Code. I described what I wanted — a map showing Pittsburgh's transit, parking, traffic, and weather feeds in near real time — and used Claude Code to build it, connected to GitHub, deployed to Vercel. The whole pipeline from idea to something live on the internet felt like it collapsed overnight. It's not perfect. There are rough edges, probably some errors, things I'll be fixing over the next few weeks. But it exists. It's real. People can use it.
+
+That feels like something worth naming, because I think it matters for civic technology specifically.
+
+---
+
+Pittsburgh publishes a lot of data. Port Authority publishes real-time bus positions and delays. The Parking Authority publishes garage availability. USGS publishes river gauge readings. 511PA publishes traffic. These feeds exist because cities have slowly, over years, been pushed toward open data — and now they're just sitting there, publicly available, waiting for someone to do something with them.
+
+The bottleneck has always been the *someone*. Building on top of open civic data used to require either a developer or a grant large enough to hire one. That was the filter that determined which data became useful tools and which data stayed as CSVs nobody looked at.
+
+That filter is dissolving. Not gone — there are still real technical challenges, and I hit several of them — but the gap between civic idea and civic product is narrower than it's ever been. And I think that matters.
+
+---
+
+The honest assessment of what I built: it was missing a few things that would have made it more useful during the event itself.
+
+Foot traffic data was the biggest gap. I could see bus delays and parking fill rates, but not where the actual bodies were — the density of people moving through downtown in real time. That feed doesn't exist in Pittsburgh's public data yet, and it's the gap that matters most.
+
+I also didn't account for road closures. So many streets were shut down in advance, and so many people had already decided to avoid downtown based on weeks of warnings, that the actual traffic during the Draft was reportedly fine. My dashboard was partly answering a question nobody was asking by game day.
+
+And I missed one data source I'm still annoyed about: private flights. Tracking the private jets arriving at Pittsburgh's airports would have been a genuinely interesting signal — when are the owners, sponsors, and entourages arriving? When is the wave cresting? It would have shown something no other feed was capturing.
+
+---
+
+Here's what I think I actually built, though: the foundation for something more useful than a Draft-specific tool.
+
+Pittsburgh has big events constantly. Three Rivers Arts Festival. Picklesburgh. Pitt games, Pirates games, concerts at PPG Paints Arena. Each one generates the same questions for a certain kind of person: Is it worth coming downtown? Where do I park? How do I get there without sitting in traffic for an hour?
+
+Long-time Pittsburghers have opinions about all of this — they'll go or they won't based on how they feel, not what a dashboard tells them. But there's another person this tool is actually for: someone new to the city, still figuring out how it works. Someone visiting for the event. Someone who'd love to come downtown but doesn't have the local knowledge that makes it feel manageable.
+
+For that person, a live map showing parking availability, bus delays, and bike share access near the event — labeled honestly, with timestamps on how fresh each feed is — is actually useful. It's the kind of tool that makes the city feel more navigable. More welcoming. A little cozier.
+
+---
+
+That's what I'm going to build next: a permanent version of this dashboard. Not locked to any single event, but configurable — you select the event, the map orients around it, the relevant feeds activate. Something that exists year-round and gets used every time something big happens downtown.
+
+The Draft was the proof of concept. The bigger idea is that this kind of tool — real-time, public-data-powered, built fast and improved in the open — is now something one person can actually build. That seems worth exploring.
+
+---
+
+The Pittsburgh NFL Draft Dashboard is live. Code is on GitHub. Data sources: Port Authority TrueTime, Pittsburgh Parking Authority, 511PA traffic, OpenWeatherMap, USGS river gauges. Built with Next.js and TypeScript, deployed on Vercel.
